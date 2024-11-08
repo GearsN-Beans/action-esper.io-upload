@@ -29,7 +29,10 @@ async function run() {
     }>(url, formData, {
       headers: {
         ...formData.getHeaders(),
-        Authorization: `Bearer ${apiKey}`
+        Authorization: `Bearer ${apiKey}`,
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity,
+        headers: {'Content-Type': 'multipart/form-data;boundary=' + formData.getBoundary()}
       },
     });
     core.debug(JSON.stringify(result.data, null, 2));
