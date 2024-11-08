@@ -29,9 +29,7 @@ async function run() {
     }>(url, formData, {
       headers: {
         ...formData.getHeaders(),
-        Authorization: `Bearer ${apiKey}`,
-        maxBodyLength: 200 * 1024 * 1024,
-        maxContentLength: 200 * 1024 * 1024
+        Authorization: `Bearer ${apiKey}`
       },
     });
     core.debug(JSON.stringify(result.data, null, 2));
