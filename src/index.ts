@@ -33,7 +33,8 @@ async function run() {
         ...formData.getHeaders(),
         Authorization: `Bearer ${apiKey}`,
         maxContentLength: Infinity,
-        maxBodyLength: Infinity
+        maxBodyLength: Infinity,
+        'Content-Type': 'multipart/form-data'
       }
       },
     );
