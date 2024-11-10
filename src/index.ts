@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
 import { createReadStream } from 'fs';
-import {FormData} from "formdata-node"
+import FormData from 'form-data';
+import axios from 'axios';
 
 async function run() {
   core.info("Authsignal Upload Version*****")
@@ -25,18 +26,20 @@ async function run() {
     formData.append('app_file', fileStream);
 
     // https://api.esper.io/tag/Application#operation/upload
-    const result = await fetch(url, {
-      method: 'POST',
+    const result = await axios.post<{
+      application: Record<string, string> | { id: string };
+    }>(url, formData, {
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        // Note: With fetch, we don't need to manually set Content-Type or boundary
-        // fetch will automatically set the correct headers from the FormData object
+        ...formData.getHeaders(),
+        Authorization: `Bearer ${apiKey}`,
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity
+      }
       },
-      body: formData, // fetch handles FormData properly out of the box
-    });
-    const data = await result.json();
-    core.debug(data);
-    core.setOutput('ApplicationId', data.application.id);
+    );
+    core.debug(JSON.stringify(result.data, null, 2));
+    core.debug(JSON.stringify(result.data));
+    core.setOutput('ApplicationId', result.data.application.id);
   } catch (err: any) {
     core.error(err);
     core.setFailed(err.message);
