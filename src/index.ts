@@ -3,6 +3,7 @@ import { createReadStream } from 'fs';
 import FormData from 'form-data';
 
 async function run() {
+  core.info("Authsignal Upload Version*****")
   core.debug(`Authsignal Version}`);
   try {
     if (process.env.DEBUG_ACTION === 'true') {
