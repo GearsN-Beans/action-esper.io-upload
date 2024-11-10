@@ -17,7 +17,7 @@ async function run() {
     const endpointName = core.getInput('endpointName');
     const filePath = core.getInput('filePath');
 
-    const url = `https://${endpointName}-api.esper.cloud/api/enterprise/${enterpriseId}/application/upload`;
+    const url = `https://${endpointName}-api.esper.cloud/api/enterprise/${enterpriseId}/application/upload/`;
     core.debug(`Esper.io endpoint ${url}`);
     core.debug(`Preparing to upload @ ${filePath}`);
 
