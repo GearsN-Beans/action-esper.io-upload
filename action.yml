@@ -17,6 +17,12 @@ inputs:
   filePath:
     description: 'APK file path'
     required: true
+  releaseTag:
+    description: 'Release Tag'
+    required: false
+  description:
+    description: 'Release description'
+    required: false
 outputs:
   applicationId:
     description: 'new uploaded application id'

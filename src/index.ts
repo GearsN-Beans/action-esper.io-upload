@@ -16,6 +16,8 @@ async function run() {
     const apiKey = core.getInput('apiKey');
     const endpointName = core.getInput('endpointName');
     const filePath = core.getInput('filePath');
+    const releaseTag = core.getInput('releaseTag');
+    const description = core.getInput('description');
 
     const url = `https://${endpointName}-api.esper.cloud/api/enterprise/${enterpriseId}/application/upload/`;
     core.debug(`Esper.io endpoint ${url}`);
@@ -27,7 +29,7 @@ async function run() {
 
     // https://api.esper.io/tag/Application#operation/upload
     const result = await axios.post<{
-      application: Record<string, string> | { id: string };
+      application: Record<string, string> | { id: string, versions: Record<string, string>[] | { id: string } };
     }>(url, formData, {
       headers: {
         ...formData.getHeaders(),
@@ -41,6 +43,25 @@ async function run() {
     core.debug(JSON.stringify(result.data, null, 2));
     core.debug(JSON.stringify(result.data));
     core.setOutput('ApplicationId', result.data.application.id);
+
+    const applicationId  = result.data.application.id
+    const versionId = result.data.application.versions[0].id
+    if(applicationId && versionId && releaseTag && description){
+      const patchUrl = `https://${endpointName}-api.esper.cloud/api/enterprise/${enterpriseId}/application/${applicationId}/version/${versionId}/`
+      const patchData = {
+        release_name: releaseTag,
+        release_comments: description
+      }
+      const result = await axios.patch<{
+         id: String
+      }>(patchUrl, patchData, {
+        headers: {
+          Authorization: `Bearer ${apiKey}`
+        }
+        },
+      );
+    }
+    
   } catch (err: any) {
     core.error(err);
     core.setFailed(err.message);
