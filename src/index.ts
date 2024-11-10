@@ -1,9 +1,9 @@
 import * as core from '@actions/core';
-import axios from 'axios';
 import { createReadStream } from 'fs';
 import FormData from 'form-data';
 
 async function run() {
+  core.debug(`Authsignal Version}`);
   try {
     if (process.env.DEBUG_ACTION === 'true') {
       core.debug('DEBUG FLAG DETECTED, SHORTCUTTING ACTION.');
@@ -24,19 +24,18 @@ async function run() {
     formData.append('app_file', fileStream);
 
     // https://api.esper.io/tag/Application#operation/upload
-    const result = await axios.post<{
-      application: Record<string, string> | { id: string };
-    }>(url, formData, {
+    const result = await fetch(url, {
+      method: 'POST',
       headers: {
-        ...formData.getHeaders(),
-        Authorization: `Bearer ${apiKey}`,
-        maxContentLength: Infinity,
-        maxBodyLength: Infinity,
-        headers: {'Content-Type': 'multipart/form-data;boundary=' + formData.getBoundary()}
+        'Authorization': `Bearer ${apiKey}`,
+        // Note: With fetch, we don't need to manually set Content-Type or boundary
+        // fetch will automatically set the correct headers from the FormData object
       },
+      body: formData, // fetch handles FormData properly out of the box
     });
-    core.debug(JSON.stringify(result.data, null, 2));
-    core.setOutput('ApplicationId', result.data.application.id);
+    const data = await result.json();
+    core.debug(data);
+    core.setOutput('ApplicationId', data.application.id);
   } catch (err: any) {
     core.error(err);
     core.setFailed(err.message);
