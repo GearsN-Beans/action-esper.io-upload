@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 import { createReadStream } from 'fs';
-import FormData from 'form-data';
+import {FormData} from "formdata-node"
 
 async function run() {
   core.info("Authsignal Upload Version*****")
