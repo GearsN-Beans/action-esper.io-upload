@@ -1,6 +1,6 @@
-name: 'Publish APK to esper.io'
-description: 'An action to publish apk to esper.io'
-author: 'jmn8718'
+name: 'Publish new APK to esper.io'
+description: 'An action to publish a new apk to esper.io'
+author: 'GearsN-Beans'
 branding:
   icon: 'edit'
   color: 'orange'
